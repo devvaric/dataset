@@ -1,22 +1,23 @@
-{"prompt":"### Instruction:\nYou are Cirav Software assistant. A user asks: 'How do I authenticate using Cirav internal SDK in Python?'\n\n### Context:\nCirav SDK name: cirav_sdk. Company conventions: use environment variables CIRAV_API_KEY and CIRAV_ENV.\n\n","completion":"### Response:\n```python\nfrom cirav_sdk import CiravClient\nimport os\n\nclient = CiravClient(api_key=os.getenv('CIRAV_API_KEY'), env=os.getenv('CIRAV_ENV'))\n# returns an authenticated client ready to call Cirav internal APIs\n```\n"}
-{"prompt":"### Instruction:\nExtract the code snippet from internal doc that shows how to upload a file to Cirav storage using Node.js." ,"completion":"### Response:\n```javascript\nconst { Storage } = require('cirav-sdk');\nconst storage = new Storage({ apiKey: process.env.CIRAV_API_KEY });\nawait storage.uploadFile('/uploads/report.pdf', './local/report.pdf');\n```\n"}
-{"prompt":"### Instruction:\nUser asks for the REST endpoint to fetch a project's metadata in Cirav API. Provide example curl." ,"completion":"### Response:\n```
-curl -H "Authorization: Bearer $CIRAV_API_KEY" \
-  https://api.cirav.internal/v1/projects/{project_id}
-```\n"}
-{"prompt":"### Instruction:\nShow how to initialize Cirav logger in Go with company default log level INFO." ,"completion":"### Response:\n```go
-import "github.com/cirav/sdk/go/cirav"
-
-logger := cirav.NewLogger(cirav.LoggerConfig{Level: "info"})
-logger.Info("Cirav service started")
-```\n"}
-{"prompt":"### Instruction:\nProvide a SQL query to list active users in Cirav DB schema 'auth' with last_login in past 30 days." ,"completion":"### Response:\n```sql
-SELECT id, email, last_login
-FROM auth.users
-WHERE last_login >= now() - interval '30 days' AND is_active = true;
-```\n"}
-{"prompt":"### Instruction:\nShow a GitHub Actions workflow snippet to run unit tests for cirav-core on push to main." ,"completion":"### Response:\n```yaml
-name: CI
+{"prompt":"### Instruction:
+You are Cirav Software assistant. A user asks: 'How do I authenticate using Cirav internal SDK in Python?'
+","response":"from cirav_sdk import CiravClient
+import os
+client = CiravClient(api_key=os.getenv('CIRAV_API_KEY'), env=os.getenv('CIRAV_ENV'))
+# authenticated client"}
+{"prompt":"### Instruction:
+Extract the code snippet that shows how to upload a file to Cirav storage using Node.js." ,"response":"const { Storage } = require('cirav-sdk');
+const storage = new Storage({ apiKey: process.env.CIRAV_API_KEY });
+await storage.uploadFile('/uploads/report.pdf', './local/report.pdf');"}
+{"prompt":"### Instruction:
+Provide example curl to fetch a project's metadata in Cirav API." ,"response":"curl -H \"Authorization: Bearer $CIRAV_API_KEY\" https://api.cirav.internal/v1/projects/{project_id}"}
+{"prompt":"### Instruction:
+Show how to initialize Cirav logger in Go with default level INFO." ,"response":"import \"github.com/cirav/sdk/go/cirav\"
+logger := cirav.NewLogger(cirav.LoggerConfig{Level: \"info\"})
+logger.Info(\"Cirav service started\")"}
+{"prompt":"### Instruction:
+Provide a SQL query to list active users in 'auth' with last_login in past 30 days." ,"response":"SELECT id, email, last_login FROM auth.users WHERE last_login >= now() - interval '30 days' AND is_active = true;"}
+{"prompt":"### Instruction:
+Show a GitHub Actions workflow snippet to run unit tests for cirav-core on push to main." ,"response":"name: CI
 on: [push]
 jobs:
   test:
@@ -28,218 +29,182 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: npm test --workspaces
-```\n"}
-{"prompt":"### Instruction:\nUser asks: 'How to rotate Cirav API key via CLI?' Provide the ciravctl command." ,"completion":"### Response:\n```
-# rotate API key for service account
-ciravctl iam rotate-key --service-account=deploy-bot --output=json
-```\n"}
-{"prompt":"### Instruction:\nProvide a Python unit test example for cirav.auth.login function using pytest and monkeypatch." ,"completion":"### Response:\n```python
-import pytest
+      - run: npm test --workspaces"}
+{"prompt":"### Instruction:
+How to rotate Cirav API key via CLI for a service account?" ,"response":"# rotate API key
+ciravctl iam rotate-key --service-account=deploy-bot --output=json"}
+{"prompt":"### Instruction:
+Provide a Python unit test for cirav.auth.login using pytest and monkeypatch." ,"response":"import pytest
 from cirav_sdk import auth
-
 def test_login_success(monkeypatch):
     monkeypatch.setenv('CIRAV_API_KEY', 'testkey')
     resp = auth.login('user@example.com', 'password')
-    assert resp['status'] == 'ok'
-```\n"}
-{"prompt":"### Instruction:\nExplain the Cirav config file structure (.cirav/config.yaml) and required fields." ,"completion":"### Response:\n```
-# .cirav/config.yaml
-api_key: "<string>"      # required
-env: "staging|production" # required
-default_project: "proj-123" # optional
-```\n"}
-{"prompt":"### Instruction:\nShow how to capture and log stack traces in Cirav Python services using cirav.logging." ,"completion":"### Response:\n```python
-import cirav.logging as clog
+    assert resp['status'] == 'ok'"}
+{"prompt":"### Instruction:
+Explain Cirav config file (.cirav/config.yaml) required fields." ,"response":"api_key: \"<string>\"  # required
+env: \"staging|production\"  # required
+default_project: \"proj-123\"  # optional"}
+{"prompt":"### Instruction:
+How to capture and log stack traces in Cirav Python services?" ,"response":"import cirav.logging as clog
 logger = clog.get_logger('service')
 try:
     risky_operation()
 except Exception as e:
-    logger.exception('operation failed')
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Provide example code for Cirav OAuth2 token exchange (JavaScript).'" ,"completion":"### Response:\n```javascript
-const fetch = require('node-fetch');
-const res = await fetch('https://auth.cirav.internal/oauth/token', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ grant_type: 'authorization_code', code })
-});
-const data = await res.json();
-```\n"}
-{"prompt":"### Instruction:\nCreate a migration SQL snippet to add column 'is_sso' to auth.providers table." ,"completion":"### Response:\n```sql
-ALTER TABLE auth.providers
-ADD COLUMN is_sso boolean DEFAULT false;
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to search private docs for code snippets using Cirav assistant?' Provide steps." ,"completion":"### Response:\n```
-1. Ask the assistant: "Search docs for 'uploadFile' examples in cirav-storage"\n2. Assistant will locate internal docs and return relevant code snippets with file paths.\n3. Use the provided snippet or request extraction of full file.
-```\n"}
-{"prompt":"### Instruction:\nProvide a TypeScript example using cirav-client to call internal payments API and handle errors." ,"completion":"### Response:\n```ts
-import { CiravClient } from 'cirav-client';
+    logger.exception('operation failed')"}
+{"prompt":"### Instruction:
+Provide example code for Cirav OAuth2 token exchange in JavaScript." ,"response":"const fetch = require('node-fetch');
+const res = await fetch('https://auth.cirav.internal/oauth/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ grant_type: 'authorization_code', code }) });
+const data = await res.json();"}
+{"prompt":"### Instruction:
+Create SQL migration to add column 'is_sso' to auth.providers." ,"response":"ALTER TABLE auth.providers ADD COLUMN is_sso boolean DEFAULT false;"}
+{"prompt":"### Instruction:
+How to search private docs for code snippets using Cirav assistant?" ,"response":"1. Ask the assistant to search for the function or keyword.
+2. Assistant locates internal docs and returns code snippets with file paths.
+3. Use or request the full file."}
+{"prompt":"### Instruction:
+TypeScript example using cirav-client to call payments API and handle errors." ,"response":"import { CiravClient } from 'cirav-client';
 const client = new CiravClient(process.env.CIRAV_API_KEY);
 try {
   const res = await client.payments.charge({ amount: 1000, currency: 'USD' });
 } catch (err) {
   console.error('payment failed', err.message);
-}
-```\n"}
-{"prompt":"### Instruction:\nShow a Dockerfile for building cirav-api service following company base image 'cirav/base:3'" ,"completion":"### Response:\n```dockerfile
-FROM cirav/base:3
+}"}
+{"prompt":"### Instruction:
+Show a Dockerfile for building cirav-api using base image 'cirav/base:3'" ,"response":"FROM cirav/base:3
 WORKDIR /app
 COPY package.json ./
 RUN npm ci
 COPY . .
-CMD ["node", "dist/server.js"]
-```\n"}
-{"prompt":"### Instruction:\nUser asks: 'How to redact sensitive fields from logs (PII) in Cirav services?' Provide code snippet in Python." ,"completion":"### Response:\n```python
-from cirav.logging import RedactingFilter
+CMD [\"node\", \"dist/server.js\"]"}
+{"prompt":"### Instruction:
+How to redact sensitive fields from logs (PII) in Cirav services?" ,"response":"from cirav.logging import RedactingFilter
 filter = RedactingFilter(fields=['email','ssn','api_key'])
-logger.addFilter(filter)
-```\n"}
-{"prompt":"### Instruction:\nProvide a sample response shape for GET /v1/projects/{id}/files API including fields and types." ,"completion":"### Response:\n```
-{
-  "id": "file-123",
-  "name": "report.pdf",
-  "size_bytes": 12345,
-  "owner_id": "user-1",
-  "created_at": "2025-05-01T12:00:00Z"
-}
-```\n"}
-{"prompt":"### Instruction:\nShow how to use Cirav feature flag SDK in React to hide beta UI." ,"completion":"### Response:\n```jsx
-import { useFeature } from 'cirav-flags';
+logger.addFilter(filter)"}
+{"prompt":"### Instruction:
+Sample response shape for GET /v1/projects/{id}/files." ,"response":"{
+  \"id\": \"file-123\",
+  \"name\": \"report.pdf\",
+  \"size_bytes\": 12345,
+  \"owner_id\": \"user-1\",
+  \"created_at\": \"2025-05-01T12:00:00Z\"
+}"}
+{"prompt":"### Instruction:
+Use feature flag SDK in React to hide beta UI." ,"response":"import { useFeature } from 'cirav-flags';
 function FeatureComponent(){
   const beta = useFeature('ui.beta_flow');
   return beta ? <BetaFlow/> : <StableFlow/>;
-}
-```\n"}
-{"prompt":"### Instruction:\nProvide troubleshooting steps when ciravctl returns 'permission denied' for service account." ,"completion":"### Response:\n```
-1. Verify ciravctl is using correct context: ciravctl config current-context
-2. Check IAM bindings for service account: ciravctl iam get --service-account=NAME
-3. Ensure API key used has roles/servicelogin
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Create a code snippet showing how to paginate through files via SDK (Python).'" ,"completion":"### Response:\n```python
-client = cirav_sdk.StorageClient()
+}"}
+{"prompt":"### Instruction:
+Troubleshooting when ciravctl returns 'permission denied' for service account." ,"response":"1. ciravctl config current-context
+2. ciravctl iam get --service-account=NAME
+3. Ensure API key has required roles"}
+{"prompt":"### Instruction:
+How to paginate through files via SDK (Python)." ,"response":"client = cirav_sdk.StorageClient()
 for page in client.list_files(project_id='proj-1', page_size=100):
     for f in page.items:
-        process(f)
-```\n"}
-{"prompt":"### Instruction:\nShow an example configuration for Cirav monitoring (Prometheus) in YAML." ,"completion":"### Response:\n```yaml
-scrape_configs:
+        process(f)"}
+{"prompt":"### Instruction:
+Configure Prometheus scrape for Cirav services." ,"response":"scrape_configs:
   - job_name: 'cirav'
     static_configs:
-      - targets: ['cirav-api:9090']
-```\n"}
-{"prompt":"### Instruction:\nProvide an example of internal error code mapping for Cirav services (4001 -> INVALID_PAYLOAD)." ,"completion":"### Response:\n```
-4001: INVALID_PAYLOAD
+      - targets: ['cirav-api:9090']"}
+{"prompt":"### Instruction:
+Provide internal error code mapping (example)." ,"response":"4001: INVALID_PAYLOAD
 4002: AUTH_FAILED
-5001: INTERNAL_ERROR
-```\n"}
-{"prompt":"### Instruction:\nUser asks: 'How to run a specific unit test file for cirav-auth with pytest?'" ,"completion":"### Response:\n```
-pytest tests/auth/test_login.py -q
-```\n"}
-{"prompt":"### Instruction:\nShow code to fetch secrets from Cirav Vault in Node.js using cirav-secrets client." ,"completion":"### Response:\n```javascript
-const vault = new (require('cirav-secrets'))({ apiKey: process.env.CIRAV_API_KEY });
-const secret = await vault.getSecret('db/credentials');
-```\n"}
-{"prompt":"### Instruction:\nCreate a sample README snippet that documents Cirav's internal code review checklist." ,"completion":"### Response:\n```
-# Code Review Checklist
-- Runs locally with `npm ci`\n- Tests added for new logic\n- No secrets checked into repo\n- Follows Cirav linting rules
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to set up local environment for cirav-ui (React) quickly?'" ,"completion":"### Response:\n```
-1. cp .env.example .env\n2. set CIRAV_API_KEY in .env\n3. npm ci && npm run dev
-```\n"}
-{"prompt":"### Instruction:\nProvide a short code snippet to validate webhook signatures in Python for Cirav webhooks." ,"completion":"### Response:\n```python
-import hmac, hashlib
+5001: INTERNAL_ERROR"}
+{"prompt":"### Instruction:
+How to run a specific pytest file for cirav-auth?" ,"response":"pytest tests/auth/test_login.py -q"}
+{"prompt":"### Instruction:
+Fetch secrets from Cirav Vault in Node.js." ,"response":"const vault = new (require('cirav-secrets'))({ apiKey: process.env.CIRAV_API_KEY });
+const secret = await vault.getSecret('db/credentials');"}
+{"prompt":"### Instruction:
+Sample README snippet documenting Cirav code review checklist." ,"response":"# Code Review Checklist
+- Runs locally with `npm ci`
+- Tests added for new logic
+- No secrets checked into repo
+- Follows Cirav linting rules"}
+{"prompt":"### Instruction:
+Set up local env for cirav-ui quickly." ,"response":"1. cp .env.example .env
+2. set CIRAV_API_KEY in .env
+3. npm ci && npm run dev"}
+{"prompt":"### Instruction:
+Validate webhook signature in Python for Cirav webhooks." ,"response":"import hmac, hashlib
 sig = request.headers.get('X-Cirav-Signature')
 expected = hmac.new(secret.encode(), request.get_data(), hashlib.sha256).hexdigest()
 if not hmac.compare_digest(sig, expected):
-    raise Unauthorized()
-```\n"}
-{"prompt":"### Instruction:\nShow an example of how Cirav stores feature metadata in MongoDB document." ,"completion":"### Response:\n```
-{
-  "_id": "feat_123",
-  "key": "ui.beta_flow",
-  "enabled": false,
-  "variants": []
-}
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Generate a sample API client call in Ruby to list teams.'" ,"completion":"### Response:\n```ruby
-client = Cirav::Client.new(api_key: ENV['CIRAV_API_KEY'])
-teams = client.teams.list(project: 'proj-1')
-```\n"}
-{"prompt":"### Instruction:\nProvide a short ESLint config snippet used by Cirav repos." ,"completion":"### Response:\n```json
-{ "extends": ["eslint:recommended","plugin:react/recommended"] }
-```\n"}
-{"prompt":"### Instruction:\nShow how to create a snapshot backup for Cirav Postgres using pg_dump in a cron job." ,"completion":"### Response:\n```
-0 2 * * * pg_dump -h db.cirav.internal -U cirav -Fc cirav_prod > /backups/cirav_$(date +%F).dump
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to implement exponential backoff using cirav-retry helper (JavaScript)?'" ,"completion":"### Response:\n```javascript
-const { retry } = require('cirav-retry');
-await retry(async () => await client.call(), { retries: 5 });
-```\n"}
-{"prompt":"### Instruction:\nProvide a code snippet for an express middleware that injects Cirav request-id from header if present." ,"completion":"### Response:\n```javascript
-app.use((req,res,next)=>{ req.requestId = req.headers['x-request-id'] || uuid(); next(); });
-```\n"}
-{"prompt":"### Instruction:\nShow how to query Redis for cache keys related to project 'proj-1' using redis-cli." ,"completion":"### Response:\n```
-redis-cli KEYS "proj:proj-1:*"
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Give a sample GraphQL query used by Cirav to fetch user permissions.'" ,"completion":"### Response:\n```
-query GetUserPerms($id: ID!) { user(id: $id) { id permissions { resource action } } }
-```\n"}
-{"prompt":"### Instruction:\nCreate a minimal Flask app that exposes a health endpoint for Cirav microservice." ,"completion":"### Response:\n```python
-from flask import Flask, jsonify
+    raise Unauthorized()"}
+{"prompt":"### Instruction:
+How Cirav stores feature metadata in MongoDB document example." ,"response":"{
+  \"_id\": \"feat_123\",
+  \"key\": \"ui.beta_flow\",
+  \"enabled\": false,
+  \"variants\": []
+}"}
+{"prompt":"### Instruction:
+Sample Ruby API client call to list teams." ,"response":"client = Cirav::Client.new(api_key: ENV['CIRAV_API_KEY'])
+teams = client.teams.list(project: 'proj-1')"}
+{"prompt":"### Instruction:
+Provide ESLint config snippet used by Cirav repos." ,"response":"{ \"extends\": [\"eslint:recommended\",\"plugin:react/recommended\"] }"}
+{"prompt":"### Instruction:
+Create pg_dump cron job for Cirav Postgres backup." ,"response":"0 2 * * * pg_dump -h db.cirav.internal -U cirav -Fc cirav_prod > /backups/cirav_$(date +%F).dump"}
+{"prompt":"### Instruction:
+Implement exponential backoff using cirav-retry helper (JS)." ,"response":"const { retry } = require('cirav-retry');
+await retry(async () => await client.call(), { retries: 5 });"}
+{"prompt":"### Instruction:
+Express middleware to inject Cirav request-id from header." ,"response":"app.use((req,res,next)=>{ req.requestId = req.headers['x-request-id'] || uuid(); next(); });"}
+{"prompt":"### Instruction:
+Query Redis for cache keys related to project 'proj-1'." ,"response":"redis-cli KEYS \"proj:proj-1:*\""}
+{"prompt":"### Instruction:
+Provide GraphQL query to fetch user permissions." ,"response":"query GetUserPerms($id: ID!) { user(id: $id) { id permissions { resource action } } }"}
+{"prompt":"### Instruction:
+Minimal Flask app exposing /health for Cirav microservice." ,"response":"from flask import Flask, jsonify
 app = Flask(__name__)
 @app.route('/health')
 def health():
-    return jsonify(status='ok')
-```\n"}
-{"prompt":"### Instruction:\nProvide a command to run database migrations using cirav-migrate CLI." ,"completion":"### Response:\n```
-cirav-migrate up --database=postgres://user:pass@db:5432/cirav_prod
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to redact API keys before returning error payloads in Cirav GraphQL?'" ,"completion":"### Response:\n```
-Strip or mask fields named api_key, secret, token in error extensions before sending to clients.
-```\n"}
-{"prompt":"### Instruction:\nShow an example React unit test using React Testing Library for Cirav Button component." ,"completion":"### Response:\n```javascript
-import { render, screen } from '@testing-library/react';
-import Button from '../Button';
-render(<Button>Click</Button>);
-expect(screen.getByText('Click')).toBeInTheDocument();
-```\n"}
-{"prompt":"### Instruction:\nProvide an example of a Cirav internal SDK doc explaining rate limits: 1000 req/min per API key." ,"completion":"### Response:\n```
-Rate limits: 1000 requests per minute per API key. 429 returned when exceeded.
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to create a quick local docker-compose for cirav services (api + db)?'" ,"completion":"### Response:\n```
-version: '3'
-services:
-  api:
-    build: ./api
-    ports: ['8080:8080']
-  db:
-    image: postgres:15
-```\n"}
-{"prompt":"### Instruction:\nShow a code example of using Cirav SDK to stream logs (Python) and handle backpressure." ,"completion":"### Response:\n```python
-stream = client.logs.stream(project='proj-1')
-for chunk in stream:
-    process(chunk)
-```\n"}
-{"prompt":"### Instruction:\nProvide a short snippet for setting RBAC role binding for team 'backend' using ciravctl." ,"completion":"### Response:\n```
-ciravctl iam bind --role=backend:developer --team=backend
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Generate an example of a migration script in Node.js using Knex for adding index.'" ,"completion":"### Response:\n```javascript
-exports.up = function(knex) { return knex.schema.table('users', t=> t.index('email')); };
-```\n"}
-{"prompt":"### Instruction:\nShow how to configure Sentry SDK in Cirav services to include release and env tags." ,"completion":"### Response:\n```python
-import sentry_sdk
-sentry_sdk.init(dsn=..., release='cirav@1.2.3', environment='production')
-```\n"}
-{"prompt":"### Instruction:\nProvide an example ESLint-disable comment for a specific rule used in Cirav codebase." ,"completion":"### Response:\n```javascript
-// eslint-disable-next-line no-console
-console.log('debug')
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to create a support bundle for Cirav services?'" ,"completion":"### Response:\n```
-Use cirav-support-cli collect --target service-name --out support-bundle.tar.gz
-```\n"}
-{"prompt":"### Instruction:\nShow a minimal Kubernetes Deployment manifest for cirav-api with 3 replicas." ,"completion":"### Response:\n```yaml
-apiVersion: apps/v1
+    return jsonify(status='ok')"}
+{"prompt":"### Instruction:
+Run database migrations using cirav-migrate CLI." ,"response":"cirav-migrate up --database=postgres://user:pass@db:5432/cirav_prod"}
+{"prompt":"### Instruction:
+How to redact API keys before returning error payloads in Cirav GraphQL?" ,"response":"Strip or mask fields named api_key, secret, token in error extensions before sending to clients."}
+{"prompt":"### Instruction:
+Jest mock for cirav.storage in tests." ,"response":"jest.mock('cirav-storage', ()=>({ uploadFile: jest.fn() }));"}
+{"prompt":"### Instruction:
+Integration test: upload and download file to Cirav storage (Python)." ,"response":"def test_upload_download(tmp_path):
+    client.storage.upload_file('test.txt', str(tmp_path/'test.txt'))
+    data = client.storage.download_file('test.txt')
+    assert data"}
+{"prompt":"### Instruction:
+OAuth token refresh curl example found in internal doc." ,"response":"curl -d 'grant_type=refresh_token&refresh_token=...' https://auth.cirav.internal/oauth/token"}
+{"prompt":"### Instruction:
+Config feature rollout percentage in Redis JSON." ,"response":"SET feat:ui.beta_flow '{\"percentage\":10}'"}
+{"prompt":"### Instruction:
+Ten QA pairs about Cirav file APIs - provide concise answers." ,"response":"Q: Max file size? A: 50MB.
+Q: Upload endpoint? A: /v1/projects/{id}/files
+Q: Auth? A: Bearer API key
+Q: Mime types allowed? A: image/*,application/pdf
+Q: Retention? A: 90 days default
+Q: Versioning? A: enabled per-project
+Q: ACL model? A: role-based
+Q: Encryption? A: at rest with KMS
+Q: Download URL expiry? A: 1 hour
+Q: CDN-backed? A: Yes"}
+{"prompt":"### Instruction:
+Explain how fine-tuned assistant should prioritize private docs over internet examples." ,"response":"Search Cirav private docs first and return snippets from internal repositories. If not found, suggest generic examples but label them clearly."}
+{"prompt":"### Instruction:
+Assistant must not hallucinate file paths; instruct to say 'Not found in Cirav docs' when unsure." ,"response":"Do not invent file paths. If not found, respond: 'Not found in Cirav docs.'"}
+{"prompt":"### Instruction:
+One-line examples for internal helper function signatures." ,"response":"upload_file(path:str, local_path:str) -> FileMeta
+get_project(id:str) -> Project
+rotate_api_key(sa:str) -> KeyInfo
+list_files(project:str, page:int=1) -> List[FileMeta]
+create_user(email:str) -> User
+check_permission(user:str, action:str) -> bool"}
+{"prompt":"### Instruction:
+Provide a JSON schema for validating webhook payloads." ,"response":"{ \"type\":\"object\", \"required\":[\"event\",\"data\"] }"}
+{"prompt":"### Instruction:
+How to create support bundle for Cirav services using cli." ,"response":"Use cirav-support-cli collect --target service-name --out support-bundle.tar.gz"}
+{"prompt":"### Instruction:
+Kubernetes Deployment manifest for cirav-api with 3 replicas (minimal)." ,"response":"apiVersion: apps/v1
 kind: Deployment
 metadata: { name: cirav-api }
 spec:
@@ -248,134 +213,78 @@ spec:
     spec:
       containers:
       - name: api
-        image: registry.cirav/internal/cirav-api:latest
-```\n"}
-{"prompt":"### Instruction:\nProvide a short code snippet demonstrating Cirav SDK's bulk_upload helper in Python." ,"completion":"### Response:\n```python
-client.storage.bulk_upload([('a.txt','/a.txt'), ('b.txt','/b.txt')])
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to add a new secret to Cirav Vault via CLI?'" ,"completion":"### Response:\n```
-cirav-vault put secret/db-password --value="chandu"
-```\n"}
-{"prompt":"### Instruction:\nShow an example of a policy (YAML) for internal service that allows reading project files only." ,"completion":"### Response:\n```
-allow:
+        image: registry.cirav/internal/cirav-api:latest"}
+{"prompt":"### Instruction:
+Use Cirav SDK to stream logs (Python) and handle backpressure." ,"response":"stream = client.logs.stream(project='proj-1')
+for chunk in stream:
+    process(chunk)"}
+{"prompt":"### Instruction:
+Set RBAC role binding for team 'backend' using ciravctl." ,"response":"ciravctl iam bind --role=backend:developer --team=backend"}
+{"prompt":"### Instruction:
+Knex migration to add index to users.email." ,"response":"exports.up = function(knex) { return knex.schema.table('users', t=> t.index('email')); };"}
+{"prompt":"### Instruction:
+Configure Sentry SDK to include release and env tags." ,"response":"import sentry_sdk
+sentry_sdk.init(dsn=..., release='cirav@1.2.3', environment='production')"}
+{"prompt":"### Instruction:
+ESLint-disable comment for no-console in Cirav codebase." ,"response":"// eslint-disable-next-line no-console
+console.log('debug')"}
+{"prompt":"### Instruction:
+How to add a new secret to Cirav Vault via CLI?" ,"response":"cirav-vault put secret/db-password --value=\"s3cr3t\""}
+{"prompt":"### Instruction:
+Policy YAML to allow reading project files only." ,"response":"allow:
   - actions: [files.read]
-    resources: ['projects:proj-1:files:*']
-```\n"}
-{"prompt":"### Instruction:\nProvide a short troubleshooting snippet for 'timeout fetching config' in Cirav services." ,"completion":"### Response:\n```
-1. Confirm config service is reachable (curl).\n2. Increase timeout in client config: CONFIG_TIMEOUT_MS=10000\n3. Check network ACLs.
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Give a concise example of how to use cirav-cli to create a project.'" ,"completion":"### Response:\n```
-ciravctl projects create --name="Marketing Site" --id=proj-marketing
-```\n"}
-{"prompt":"### Instruction:\nShow a sample JSON schema used to validate webhook payloads for Cirav events." ,"completion":"### Response:\n```json
-{ "type":"object", "required":["event","data"] }
-```\n"}
-{"prompt":"### Instruction:\nProvide code for graceful shutdown handler in Node.js for Cirav services to flush metrics." ,"completion":"### Response:\n```javascript
-process.on('SIGTERM', async ()=>{ await metrics.flush(); process.exit(0); });
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to run a database explain plan for a slow query in Cirav Postgres?'" ,"completion":"### Response:\n```
-EXPLAIN (ANALYZE, BUFFERS) SELECT ...;
-```\n"}
-{"prompt":"### Instruction:\nShow a minimal example of Cirav's internal pagination response for SDKs." ,"completion":"### Response:\n```
-{ "items": [...], "next_cursor": "abc123" }
-```\n"}
-{"prompt":"### Instruction:\nProvide a short example of how to use cirav-telemetry to add custom metric counter in Go." ,"completion":"### Response:\n```go
-metric := telemetry.NewCounter("jobs.processed")
-metric.Add(1)
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Generate an example of a security header configuration for Nginx used by Cirav.'" ,"completion":"### Response:\n```
-add_header X-Frame-Options "DENY";
-add_header X-Content-Type-Options "nosniff";
-```\n"}
-{"prompt":"### Instruction:\nShow how to use cirav-sdk to fetch a user's permissions cache and invalidate it (Python)." ,"completion":"### Response":"### Response:\n```python
-cache = client.permissions.get_cache(user_id='user-1')
-client.permissions.invalidate_cache(user_id='user-1')
-```\n"}
-{"prompt":"### Instruction:\nProvide a sample log line format used across Cirav services (json)." ,"completion":"### Response:\n```
-{"ts":"2025-05-01T12:00:00Z","level":"info","service":"cirav-api","msg":"started","request_id":"r-123"}
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to set up local debugging with hot reload for cirav-core (Python) using pipenv?'" ,"completion":"### Response:\n```
-pipenv install --dev && pipenv run flask run --reload
-```\n"}
-{"prompt":"### Instruction:\nShow an example of Cirav's internal code comment standard for functions (docstring style)." ,"completion":"### Response:\n```
-"""Short description.
-Args:
-  param1 (str): description
-Returns:
-  dict: description
-"""
-```\n"}
-{"prompt":"### Instruction:\nProvide a compact example of a sentinel test to verify feature rollout percentages in Cirav flags." ,"completion":"### Response:\n```
-assert rollout_percentage('ui.beta_flow') == 10
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to search for 'TODO(cirav)' tags across repos using code search CLI?'" ,"completion":"### Response:\n```
-codesearch "TODO(cirav)" --org=cirav --repos=*
-```\n"}
-{"prompt":"### Instruction:\nShow how to configure health checks for Kubernetes liveness/readiness probes for cirav-api." ,"completion":"### Response:\n```
-livenessProbe:
-  httpGet: { path: /health, port: 8080 }
-```\n"}
-{"prompt":"### Instruction:\nProvide an example of a short onboarding guide step for a new engineer to run Cirav backend locally." ,"completion":"### Response:\n```
-1. Fork repo, clone cirav-core\n2. cp .env.example .env and set CIRAV_API_KEY\n3. npm ci && npm run dev
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Create a sample assistant answer that extracts and returns a code snippet for cirav.storage.upload_file from an internal doc path /docs/storage.md'" ,"completion":"### Response:\n```markdown
-Found snippet in /docs/storage.md:
-```python
-client.storage.upload_file('/uploads/notes.txt', './notes.txt')
-```
-Use this snippet to upload files to Cirav storage.
-```\n"}
-{"prompt":"### Instruction:\nProvide a short policy for handling customer PII when building Cirav features." ,"completion":"### Response:\n```
-- Never store full PII in logs.\n- Access to PII requires approval and audit logging.
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to add a validate endpoint in Express that checks API key format for Cirav?'" ,"completion":"### Response:\n```javascript
-app.post('/validate', (req,res)=>{ if(!/^capi_[0-9a-f]{32}$/.test(req.body.key)) return res.status(400).send('invalid'); res.send('ok'); });
-```\n"}
-{"prompt":"### Instruction:\nShow a sample mapping of internal package names to repo names (monorepo) for Cirav." ,"completion":"### Response:\n```
-packages:
-  @cirav/core: packages/core
-  @cirav/ui: packages/ui
-```\n"}
-{"prompt":"### Instruction:\nProvide a snippet showing how to configure rate limit headers in responses (X-RateLimit-Remaining) in Python Flask." ,"completion":"### Response:\n```python
-resp.headers['X-RateLimit-Remaining'] = str(remaining)
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Give an example code for a health-check test that verifies DB connectivity for Cirav services.'" ,"completion":"### Response:\n```python
-def test_db_conn():
-    assert db.execute('SELECT 1').scalar() == 1
-```\n"}
-{"prompt":"### Instruction:\nCreate a concise example of an assistant response that refuses to disclose secrets and suggests redacted snippet instead." ,"completion":"### Response:\n```
-I can't share secrets. Here's a redacted snippet with placeholders for secrets: api_key = "<REDACTED>"
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Generate 5 short variations of prompts a user might ask the assistant to extract code for uploading files to Cirav.'" ,"completion":"### Response:\n```
-1. Show code to upload file using cirav SDK (python).\n2. How to upload file to Cirav storage (node).\n3. Example: cirav.storage.uploadFile usage.\n4. Uploading images to Cirav via API curl.\n5. SDK snippet for bulk upload in cirav.
-```\n"}
-{"prompt":"### Instruction:\nProvide a minimal example of how to mock cirav.storage in Jest tests." ,"completion":"### Response:\n```javascript
-jest.mock('cirav-storage', ()=>({ uploadFile: jest.fn() }));
-```\n"}
-{"prompt":"### Instruction:\nUser: 'How to add a basic integration test that uploads and then downloads a file to Cirav storage (Python).'" ,"completion":"### Response:\n```python
-def test_upload_download(tmp_path):
+    resources: ['projects:proj-1:files:*']"}
+{"prompt":"### Instruction:
+Troubleshoot 'timeout fetching config' in Cirav services - concise steps." ,"response":"1. Confirm config service reachable.
+2. Increase timeout: CONFIG_TIMEOUT_MS=10000
+3. Check network ACLs."}
+{"prompt":"### Instruction:
+Create project using ciravctl CLI example." ,"response":"ciravctl projects create --name=\"Marketing Site\" --id=proj-marketing"}
+{"prompt":"### Instruction:
+Implement header X-RateLimit-Remaining in Flask responses." ,"response":"resp.headers['X-RateLimit-Remaining'] = str(remaining)"}
+{"prompt":"### Instruction:
+Health-check test verifying DB connectivity (Python)." ,"response":"def test_db_conn():
+    assert db.execute('SELECT 1').scalar() == 1"}
+{"prompt":"### Instruction:
+Refuse to disclose secrets and provide redacted snippet example." ,"response":"I can't share secrets. Here's a redacted snippet: api_key = \"<REDACTED>\""}
+{"prompt":"### Instruction:
+Generate 5 short prompt variations asking to extract code for uploading files (examples)." ,"response":"1. Show code to upload file using cirav SDK (python).
+2. How to upload file to Cirav storage (node).
+3. Example: cirav.storage.uploadFile usage.
+4. Uploading images to Cirav via API curl.
+5. SDK snippet for bulk upload in cirav."}
+{"prompt":"### Instruction:
+Mock cirav.storage for Jest tests example." ,"response":"jest.mock('cirav-storage', ()=>({ uploadFile: jest.fn() }));"}
+{"prompt":"### Instruction:
+Integration test: upload then download file (Python) concise." ,"response":"def test_upload_download(tmp_path):
     client.storage.upload_file('test.txt', str(tmp_path/'test.txt'))
     data = client.storage.download_file('test.txt')
-    assert data
-```\n"}
-{"prompt":"### Instruction:\nShow a short example of a Cirav assistant response that cites internal doc path and returns a code snippet for OAuth token refresh." ,"completion":"### Response:\n```text
-Found in /internal/auth/oauth.md:
-POST /oauth/token with grant_type=refresh_token\nExample curl:\n`curl -d 'grant_type=refresh_token&refresh_token=...' https://auth.cirav.internal/oauth/token`
-```\n"}
-{"prompt":"### Instruction:\nProvide a compact sample of a config for feature rollout percentages stored in Redis as JSON." ,"completion":"### Response:\n```
-SET feat:ui.beta_flow '{"percentageof":10}'
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Give me 10 diverse short QA pairs that the assistant should answer about Cirav file APIs.'" ,"completion":"### Response:\n```
-Q: Max file size? A: 50MB.\nQ: Upload endpoint? A: /v1/projects/{id}/files\nQ: Auth? A: Bearer API key\nQ: Mime types allowed? A: image/*,application/pdf\nQ: Retention? A: 90 days default\nQ: Versioning? A: enabled per-project\nQ: ACL model? A: role-based\nQ: Encryption? A: at rest with KMS\nQ: Download URL expiry? A: 1 hour\nQ: CDN-backed? A: Yes
-```\n"}
-{"prompt":"### Instruction:\nProvide an assistant completion that explains how fine-tuned Cirav assistant should prioritize private docs over internet examples when extracting code." ,"completion":"### Response:\n```
-The fine-tuned assistant must search Cirav private docs first and return snippets from internal repositories. If not found, it may suggest generic examples but should label them clearly.
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Create a short dataset example that instructs the model to respond with file path and code snippet when asked for implementation references.'" ,"completion":"### Response:\n```
-Instruction: When user asks for implementation references, reply with the repo path and a concise code snippet extracted from that file.\nExample response: Path: repo/cirav-core/src/storage.py\nSnippet: def upload_file(...): ...\n```\n"}
-{"prompt":"### Instruction:\nProvide a short completion that enforces the assistant to never hallucinate file paths; if unsure, say 'not found in docs'." ,"completion":"### Response:\n```
-Do not invent file paths. If the document or path cannot be found, respond: 'Not found in Cirav docs.'
-```\n"}
-{"prompt":"### Instruction:\nUser: 'Generate one-line examples for 10 internal Cirav helper functions and their signatures.'" ,"completion":"### Response:\n```
-upload_file(path:str, local_path:str) -> FileMeta\nget_project(id:str) -> Project\nrotate_api_key(sa:str) -> KeyInfo\nlist_files(project:str, page:int=1) -> List[FileMeta]\ncreate_user(email:str) -> User\ncheck_permission(user:str, action:str) -> bool
-```\n"}
+    assert data"}
+{"prompt":"### Instruction:
+Assistant response that cites internal doc path and returns code snippet for OAuth refresh." ,"response":"Found in /internal/auth/oauth.md: POST /oauth/token with grant_type=refresh_token
+Example curl: curl -d 'grant_type=refresh_token&refresh_token=...' https://auth.cirav.internal/oauth/token"}
+{"prompt":"### Instruction:
+Sample config storing rollout percentages as JSON in Redis." ,"response":"SET feat:ui.beta_flow '{\"percentage\":10}'"}
+{"prompt":"### Instruction:
+Ten diverse QA pairs about Cirav file APIs (concise)." ,"response":"Q: Max file size? A: 50MB.
+Q: Upload endpoint? A: /v1/projects/{id}/files
+Q: Auth? A: Bearer API key
+Q: Mime types allowed? A: image/*,application/pdf
+Q: Retention? A: 90 days default
+Q: Versioning? A: enabled per-project
+Q: ACL model? A: role-based
+Q: Encryption? A: at rest with KMS
+Q: Download URL expiry? A: 1 hour
+Q: CDN-backed? A: Yes"}
+{"prompt":"### Instruction:
+Enforce assistant to search private docs first and label internet examples." ,"response":"Prioritize Cirav private docs; if fallback to internet examples, label them as external/general."}
+{"prompt":"### Instruction:
+Ensure assistant never invents file paths; respond 'Not found in Cirav docs' if missing." ,"response":"Do not invent paths. Respond: 'Not found in Cirav docs.' when not available."}
+{"prompt":"### Instruction:
+Provide minimal example of helper functions signatures (multiple lines)." ,"response":"upload_file(path:str, local_path:str) -> FileMeta
+get_project(id:str) -> Project
+rotate_api_key(sa:str) -> KeyInfo
+list_files(project:str, page:int=1) -> List[FileMeta]
+create_user(email:str) -> User"}
+{"prompt":"### Instruction:
+Short set of steps to run local debugging with hot reload for cirav-core (Python)." ,"response":"pipenv install --dev && pipenv run flask run --reload"}
